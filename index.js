@@ -1,6 +1,6 @@
 // index.js
 console.log("js is working today")
-// test change 
+// test change 2
 
 $(document).ready(function () {
     console.log('dom ready');
