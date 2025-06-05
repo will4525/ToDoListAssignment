@@ -7,8 +7,8 @@ $(".demo.index").ready(function () {
             success: function (response, textStatus) {
                 $('#todo-list').empty();
                 response.tasks.forEach(function (task) {
-                    $('#todo-list').append('<p>' + task.content + '</p>');
-                })
+                    $('#todo-list').append('<div class="row"><p class="col-xs-8">' + task.content + '</p><button class="delete" data-id="' + task.id + '">Delete</button><input type="checkbox" class="mark-complete" data-id="' + task.id + '"' + (task.completed ? 'checked' : '') + '>');
+                });
             },
             error: function (request, textStatus, errorMessage) {
                 console.log(errorMessage);
@@ -61,4 +61,58 @@ var deleteTask = function (id) {
 
 $(document).on('click', '.delete', function () {
     console.log($(this).data('id'))
+});
+
+$.ajax({
+    type: 'PUT',
+    url: 'https://fewd-todolist-api.onrender.com/tasks/4/mark_complete?api_key=2',
+    dataType: 'json',
+    success: function (response, textStatus) {
+        console.log(response);
+    },
+    error: function (request, textStatus, errorMessage) {
+        console.log(errorMessage);
+    }
+});
+
+var markTaskComplete = function (id) {
+    $.ajax({
+        type: 'PUT',
+        url: 'https://fewd-todolist-api.onrender.com/tasks/' + id + '/mark_complete?api_key=2',
+        dataType: 'json',
+        success: function (response, textStatus) {
+            getAndDisplayAllTasks();
+        },
+        error: function (request, textStatus, errorMessage) {
+            console.log(errorMessage);
+        }
+    });
+}
+
+$(document).on('change', '.mark-complete', function () {
+    if (this.checked) {
+        markTaskComplete($(this).data('id'));
+    }
+});
+
+var markTaskActive = function (id) {
+    $.ajax({
+        type: 'PUT',
+        url: 'https://fewd-todolist-api.onrender.com/tasks/' + id + '/mark_active?api_key=2',
+        dataType: 'json',
+        success: function (response, textStatus) {
+            getAndDisplayAllTasks();
+        },
+        error: function (request, textStatus, errorMessage) {
+            console.log(errorMessage);
+        }
+    });
+}
+
+$(document).on('change', '.mark-complete', function () {
+    if (this.checked) {
+        markTaskComplete($(this).data('id'));
+    } else {
+        markTaskActive($(this).data('id'));
+    }
 });
